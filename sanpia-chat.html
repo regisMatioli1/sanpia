@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANP.IA - San Pio Construtora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* CORES - MUDE AQUI */
+            --cor-principal: #ff6600; 
+            --cor-secundaria: #2e5a8f;
+            --cor-fundo: #f5f7fa;
+            --cor-mensagem-usuario: #1e3a5f;
+            --cor-mensagem-ia: #ffffff;
+            --cor-texto: #333333;
+            --cor-texto-claro: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--cor-fundo);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--cor-principal);
+            color: var(--cor-texto-claro);
+            padding: 45px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+      
+
+        .header-info h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .header-info p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* CHAT CONTAINER */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* MENSAGENS */
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: var(--cor-mensagem-usuario);
+            color: var(--cor-texto-claro);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.ia {
+            background: var(--cor-mensagem-ia);
+            color: var(--cor-texto);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .message.ia .ia-name {
+            font-weight: 600;
+            color: var(--cor-principal);
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        /* LOADING */
+        .loading {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px;
+        }
+
+        .loading span {
+            width: 8px;
+            height: 8px;
+            background: var(--cor-secundaria);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading span:nth-child(1) { animation-delay: -0.32s; }
+        .loading span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* INPUT AREA */
+        .input-area {
+            background: white;
+            padding: 15px 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-area input:focus {
+            border-color: var(--cor-principal);
+        }
+
+        .input-area button {
+            background: var(--cor-principal);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        .input-area button:hover {
+            background: var(--cor-secundaria);
+        }
+
+        .input-area button:active {
+            transform: scale(0.98);
+        }
+
+        .input-area button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* WELCOME MESSAGE */
+        .welcome {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .welcome h2 {
+            color: var(--cor-principal);
+            margin-bottom: 10px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .message {
+                max-width: 90%;
+            }
+            
+            .header h1 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <!-- LOGO: substitua por <img src="logo.png" class="logo" alt="Logo"> -->
+        <img src="logo.png" class="logo" alt="Logo SANP.IA">
+        <div class="header-info">
+            <h1>SANP.IA</h1>
+            <p>Assistente Virtual - San Pio Construtora</p>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="welcome">
+            <h2>Olá! 👋</h2>
+            <p>Sou a SANP.IA, sua assistente virtual.<br>Como posso ajudar você hoje?</p>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input 
+            type="text" 
+            id="messageInput" 
+            placeholder="Digite sua mensagem..." 
+            autocomplete="off"
+        >
+        <button id="sendButton" onclick="sendMessage()">Enviar</button>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURAÇÕES - ALTERE AQUI
+        // ============================================
+        const WEBHOOK_URL = 'https://regitera.app.n8n.cloud/webhook/sanpia';
+        const SESSION_ID = 'user-' + Math.random().toString(36).substr(2, 9);
+        // ============================================
+
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Enter para enviar
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function addMessage(text, type) {
+            // Remove welcome se existir
+            const welcome = document.querySelector('.welcome');
+            if (welcome) welcome.remove();
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            if (type === 'ia') {
+                messageDiv.innerHTML = `<div class="ia-name">SANP.IA</div>${text}`;
+            } else {
+                messageDiv.textContent = text;
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showLoading() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message ia loading';
+            loadingDiv.id = 'loading';
+            loadingDiv.innerHTML = '<span></span><span></span><span></span>';
+            chatContainer.appendChild(loadingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) loading.remove();
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Adiciona mensagem do usuário
+            addMessage(message, 'user');
+            messageInput.value = '';
+            sendButton.disabled = true;
+
+            // Mostra loading
+            showLoading();
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        sessionId: SESSION_ID
+                    })
+                });
+
+                hideLoading();
+
+                if (response.ok) {
+                    const text = await response.text();
+                    addMessage(text || 'Recebi sua mensagem!', 'ia');
+                } else {
+                    addMessage('Desculpe, ocorreu um erro. Tente novamente.', 'ia');
+                }
+            } catch (error) {
+                hideLoading();
+                console.error('Erro:', error);
+                addMessage('Não consegui conectar com o servidor. Verifique sua conexão.', 'ia');
+            }
+
+            sendButton.disabled = false;
+            messageInput.focus();
+        }
+    </script>
+</body>
+</html>
